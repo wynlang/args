@@ -5,6 +5,7 @@ fn parse_flag(args: array, flag: string) -> bool {
     }
     return false
 }
+
 fn parse_value(args: array, flag: string) -> string {
     for i in 0..args.len() {
         var a = "" + args[i]
@@ -12,13 +13,23 @@ fn parse_value(args: array, flag: string) -> string {
     }
     return ""
 }
-fn main() -> int {
-    Test.init("args")
+
+test "flag found" {
     var test_args = ["app", "--verbose", "--port", "8080", "run"]
-    Test.assert(parse_flag(test_args, "--verbose"), "flag found")
-    Test.assert(!parse_flag(test_args, "--debug"), "flag missing")
-    Test.assert_eq_str(parse_value(test_args, "--port"), "8080", "value")
-    Test.assert_eq_str(parse_value(test_args, "--host"), "", "missing value")
-    Test.summary()
-    return 0
+    assert(parse_flag(test_args, "--verbose"))
+}
+
+test "flag missing" {
+    var test_args = ["app", "--verbose", "--port", "8080", "run"]
+    assert(!parse_flag(test_args, "--debug"))
+}
+
+test "value" {
+    var test_args = ["app", "--verbose", "--port", "8080", "run"]
+    assert_eq(parse_value(test_args, "--port"), "8080")
+}
+
+test "missing value" {
+    var test_args = ["app", "--verbose", "--port", "8080", "run"]
+    assert_eq(parse_value(test_args, "--host"), "")
 }
